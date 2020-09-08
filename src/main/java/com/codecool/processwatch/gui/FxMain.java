@@ -65,6 +65,7 @@ public class FxMain extends Application {
         refreshButton.setOnAction(ignoreEvent -> System.out.println("Button pressed"));
         aboutButton.setOnAction(actionEvent -> {
             final Stage dialog = new Stage();
+            dialog.setTitle("About");
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(primaryStage);
             VBox dialogVbox = new VBox(20);
