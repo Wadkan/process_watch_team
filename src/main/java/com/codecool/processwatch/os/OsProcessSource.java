@@ -20,18 +20,57 @@ public class OsProcessSource implements ProcessSource {
 
         Stream<ProcessHandle> processStream = ProcessHandle.allProcesses();
 
-        processStream.forEach(process -> printInfo(process));
+        //processStream.forEach(process -> printInfo(process));
         processStream.forEach(process -> addProcessToList(process));
 
 
-        return Stream.of(new Process(1,  1, new User("root"), "init", new String[0]),
-                         new Process(42, 1, new User("Codecooler"), "processWatch", new String[] {"--cool=code", "-v"}));
+        return Stream.of(new Process(1, 1, new User("root"), "init", new String[0]),
+                new Process(42, 1, new User("Codecooler"), "processWatch", new String[]{"--cool=code", "-v"}),
+                new Process(1, 2, new User("hula"), "hello", new String[0]));
     }
 
-    private static List<Process> processList = new LinkedList<Process>();
+    private static List<Process> processList = new ArrayList<Process>();
 
-    private static void addProcessToList(ProcessHandle process){
-        Process p = new Process(1,2, new User("hula"), "hello", new String[0]);
+    private static Stream<Process> stream = processList.stream();
+
+    private static void addProcessToList(ProcessHandle process) {
+        long processID = process.pid();
+        Optional<ProcessHandle> parentProcess = process.parent();
+        System.out.println(parentProcess);
+        long parentPID;
+        if (parentProcess.isPresent()) {
+            parentPID = parentProcess.get().pid();
+        } else {
+            parentPID = 0;
+        }
+        ProcessHandle.Info processInfo = process.info();
+        System.out.println(processInfo);
+        Optional<String> user = processInfo.user();
+        String userName;
+        if (user.isPresent()) {
+            userName = user.get();
+        } else {
+            userName = "";
+        }
+        Optional<String> cmd = processInfo.command();
+        String command;
+        if (cmd.isPresent()) {
+            String commandLong = cmd.get();
+            String[] parts = commandLong.split("/");
+            command = parts[parts.length - 1];
+        } else {
+            command = "";
+        }
+        Optional<String[]> args = processInfo.arguments();
+        String[] arguments;
+        if (args.isPresent()) {
+            arguments = args.get();
+        } else {
+            arguments = new String[0];
+        }
+        System.out.println("pid: " + processID + " parent pid: " + parentPID + " user: " + userName + " command: " + command + " arguments: " + Arrays.toString(arguments));
+        Process p = new Process(1, 2, new User("hula"), "hello", new String[0]);
+        processList.add(p);
     }
 
     private static void printInfo(ProcessHandle processHandle) {
