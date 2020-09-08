@@ -45,7 +45,7 @@ public class OsProcessSource implements ProcessSource {
         if (user.isPresent()) {
             userName = user.get();
         } else {
-            userName = "";
+            userName = "Not available";
         }
         Optional<String> cmd = processInfo.command();
         String command;
@@ -54,14 +54,18 @@ public class OsProcessSource implements ProcessSource {
             String[] parts = commandLong.split("/");
             command = parts[parts.length - 1];
         } else {
-            command = "";
+            command = "Not available";
         }
         Optional<String[]> args = processInfo.arguments();
         String[] arguments;
         if (args.isPresent()) {
-            arguments = args.get();
+            if (args.get().length == 0) {
+                arguments = new String[] {"Not available"};
+            } else {
+                arguments = args.get();
+            }
         } else {
-            arguments = new String[0];
+            arguments = new String[] {"Not available"};
         }
         System.out.println("pid: " + processID + " parent pid: " + parentPID + " user: " + userName + " command: " + command + " arguments: " + Arrays.toString(arguments));
         Process p = new Process(processID, parentPID, new User(userName), command, arguments);
