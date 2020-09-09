@@ -63,7 +63,10 @@ public class FxMain extends Application {
         tableView.getColumns().add(argsColumn);
 
         var refreshButton = new Button("Refresh");
-        refreshButton.setOnAction(ignoreEvent -> System.out.println("Button pressed"));
+        refreshButton.setOnAction(actionEvent -> {
+            System.out.println("List refreshed");
+            app.refresh();
+        });
         var refreshQuestionMark = new Button ("?");
         refreshQuestionMark.setOnAction(actionEvent -> popUpWindow ("Refresh", "This will refresh the page!", primaryStage));
         var aboutButton = new Button("About");
