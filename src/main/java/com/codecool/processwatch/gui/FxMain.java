@@ -77,6 +77,10 @@ public class FxMain extends Application {
         HBox aboutBox = new HBox(10, aboutButton, aboutQuestionMark);
         var box = new VBox(refreshBox, aboutBox);
         var scene = new Scene(box, 640, 480);
+
+        scene.getStylesheets().add("font_style.css");
+
+
         var elements = box.getChildren();
         elements.addAll(tableView);
         primaryStage.setScene(scene);
