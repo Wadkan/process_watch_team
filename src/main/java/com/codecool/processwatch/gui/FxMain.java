@@ -110,7 +110,8 @@ public class FxMain extends Application {
     public void keyPressed(KeyEvent e, TextField userInput) {
         if (e.getCode()== KeyCode.ENTER){
             String inputText = userInput.getText();
-            System.out.println(inputText);
+            System.out.println("The selected username is: " + inputText);
+            app.refresh();
         }
 
     }

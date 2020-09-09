@@ -67,7 +67,7 @@ public class OsProcessSource implements ProcessSource {
         } else {
             arguments = new String[] {"Not available"};
         }
-        System.out.println("pid: " + processID + " parent pid: " + parentPID + " user: " + userName + " command: " + command + " arguments: " + Arrays.toString(arguments));
+        // System.out.println("pid: " + processID + " parent pid: " + parentPID + " user: " + userName + " command: " + command + " arguments: " + Arrays.toString(arguments));
         Process p = new Process(processID, parentPID, new User(userName), command, arguments);
         if (userArg.equals(userName) || userArg.equals("")) {
             processList.add(p);
