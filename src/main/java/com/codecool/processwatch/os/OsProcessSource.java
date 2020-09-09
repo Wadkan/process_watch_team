@@ -20,15 +20,15 @@ public class OsProcessSource implements ProcessSource {
 
         Stream<ProcessHandle> processStream = ProcessHandle.allProcesses();
 
+        Stream<Process> stream = processList.stream();
+
         processStream.forEach(process -> addProcessToList(process));
 
         return stream;
 
     }
 
-    private static List<Process> processList = new ArrayList<Process>();
-
-    private static Stream<Process> stream = processList.stream();
+    private static List<Process> processList = new ArrayList<>();
 
     private static void addProcessToList(ProcessHandle process) {
         long processID = process.pid();
