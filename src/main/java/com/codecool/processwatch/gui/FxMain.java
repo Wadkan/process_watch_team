@@ -1,9 +1,12 @@
 package com.codecool.processwatch.gui;
 
+import com.codecool.processwatch.domain.ProcessWatchApp;
+import com.codecool.processwatch.os.OsProcessSource;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -50,22 +53,39 @@ public class FxMain extends Application {
         processNameColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("processName"));
         var argsColumn = new TableColumn<ProcessView, String>("Arguments");
         argsColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("args"));
+
+        var killColumn = new TableColumn<ProcessView, String>("KILL");
+        killColumn.setCellValueFactory(new PropertyValueFactory< ProcessView, String>("KILL THIS"));
+
         tableView.getColumns().add(pidColumn);
         tableView.getColumns().add(parentPidColumn);
         tableView.getColumns().add(userNameColumn);
         tableView.getColumns().add(processNameColumn);
         tableView.getColumns().add(argsColumn);
+        tableView.getColumns().add(killColumn);
+
+        // select a row
+//        TableView.TableViewSelectionModel selectionModel = tableView.getSelectionModel();
+//        selectionModel.setSelectionMode(SelectionMode.SINGLE);
+//        selectionModel.select(0);
+//        selectionModel.clearSelection();
 
         var refreshButton = new Button("Refresh");
         refreshButton.setOnAction(ignoreEvent -> System.out.println("Button pressed"));
 
+        var killButton = new Button("Kill process");
+        killButton.setOnAction(ignoreEvent -> ProcessWatchApp.killDiscord(33220));
+
         var box = new VBox();
         var scene = new Scene(box, 640, 480);
         var elements = box.getChildren();
-        elements.addAll(refreshButton,
+        scene.getStylesheets().add("font_style.css");
+        elements.addAll(refreshButton, killButton,
                         tableView);
 
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
+
 }
