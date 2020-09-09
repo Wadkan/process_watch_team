@@ -83,7 +83,8 @@ public class FxMain extends Application {
 
         TextField userInput = new TextField();
         userInput.setPromptText("Search by user");
-        userInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent));
+        userInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, userInput));
+        userInput.getText();
         HBox userInputHBox = new HBox(10, userInput);
 
         var box = new VBox(refreshBox, aboutBox, userInputHBox);
@@ -106,9 +107,10 @@ public class FxMain extends Application {
         dialog.show();
     }
 
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent e, TextField userInput) {
         if (e.getCode()== KeyCode.ENTER){
-            System.out.println("Hello");
+            String inputText = userInput.getText();
+            System.out.println(inputText);
         }
 
     }
