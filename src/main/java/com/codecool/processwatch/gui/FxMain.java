@@ -9,12 +9,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import static javafx.collections.FXCollections.observableArrayList;
 
 /**
@@ -56,6 +60,7 @@ public class FxMain extends Application {
         processNameColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("processName"));
         var argsColumn = new TableColumn<ProcessView, String>("Arguments");
         argsColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("args"));
+
         tableView.getColumns().add(pidColumn);
         tableView.getColumns().add(parentPidColumn);
         tableView.getColumns().add(userNameColumn);
@@ -75,7 +80,13 @@ public class FxMain extends Application {
         aboutQuestionMark.setOnAction(actionEvent -> popUpWindow("About", "Test", primaryStage));
         HBox refreshBox = new HBox(10, refreshButton, refreshQuestionMark);
         HBox aboutBox = new HBox(10, aboutButton, aboutQuestionMark);
-        var box = new VBox(refreshBox, aboutBox);
+
+        TextField userInput = new TextField();
+        userInput.setPromptText("Search by user");
+        userInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent));
+        HBox userInputHBox = new HBox(10, userInput);
+
+        var box = new VBox(refreshBox, aboutBox, userInputHBox);
         var scene = new Scene(box, 640, 480);
         var elements = box.getChildren();
         elements.addAll(tableView);
@@ -93,6 +104,13 @@ public class FxMain extends Application {
         Scene dialogScene = new Scene(dialogVbox, 300, 200);
         dialog.setScene(dialogScene);
         dialog.show();
+    }
+
+    public void keyPressed(KeyEvent e) {
+        if (e.getCode()== KeyCode.ENTER){
+            System.out.println("Hello");
+        }
+
     }
 
 }
