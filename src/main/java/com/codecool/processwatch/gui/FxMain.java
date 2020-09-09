@@ -1,5 +1,6 @@
 package com.codecool.processwatch.gui;
 
+import com.sun.javafx.menu.MenuItemBase;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -63,31 +64,33 @@ public class FxMain extends Application {
 
         var refreshButton = new Button("Refresh");
         var refreshQuestionMark = new Button ("?");
-        var aboutButton = new Button("About");         // we create the button here
-        var aboutQuestionMark = new Button("?");         // we create the button here
+
+        refreshQuestionMark.setOnAction(actionEvent -> popUpWindow ("Refresh", "This will refresh the page!", primaryStage));
+        var aboutButton = new Button("About");
+        var aboutQuestionMark = new Button("?");
+        aboutQuestionMark.setOnAction(actionEvent -> popUpWindow("About", "Test", primaryStage));
         refreshButton.setOnAction(ignoreEvent -> System.out.println("Button pressed"));
-        aboutButton.setOnAction(actionEvent -> {
-            final Stage dialog = new Stage();
-            dialog.setTitle("About");
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(primaryStage);
-            VBox dialogVbox = new VBox(20);
-            dialogVbox.getChildren().add(new Text("Hello! This is our program!"));
-            Scene dialogScene = new Scene(dialogVbox, 300, 200);
-            dialog.setScene(dialogScene);
-            dialog.show();
-        });
+        aboutButton.setOnAction(actionEvent -> popUpWindow("About", "This is our program!", primaryStage));
         HBox refreshBox = new HBox(10, refreshButton, refreshQuestionMark);
         HBox aboutBox = new HBox(10, aboutButton, aboutQuestionMark);
         var box = new VBox(refreshBox, aboutBox);
         var scene = new Scene(box, 640, 480);
         var elements = box.getChildren();
-        elements.addAll(          // we add here the button to the scene
-                        tableView);
-
-
+        elements.addAll(tableView);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private void popUpWindow(String title, String text, Stage primaryStage){
+        final Stage dialog = new Stage();
+        dialog.setTitle(title);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(primaryStage);
+        VBox dialogVbox = new VBox(20);
+        dialogVbox.getChildren().add(new Text(text));
+        Scene dialogScene = new Scene(dialogVbox, 300, 200);
+        dialog.setScene(dialogScene);
+        dialog.show();
     }
 
 }
