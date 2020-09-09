@@ -62,7 +62,10 @@ public class FxMain extends Application {
 
         var refreshButton = new Button("Refresh");
         var aboutButton = new Button("About");         // we create the button here
-        refreshButton.setOnAction(ignoreEvent -> System.out.println("Button pressed"));
+        refreshButton.setOnAction(actionEvent -> {
+            System.out.println("List refreshed");
+            app.refresh();
+        });
         aboutButton.setOnAction(actionEvent -> {
             final Stage dialog = new Stage();
             dialog.setTitle("About");
