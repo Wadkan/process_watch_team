@@ -54,15 +54,15 @@ public class FxMain extends Application {
         var argsColumn = new TableColumn<ProcessView, String>("Arguments");
         argsColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("args"));
 
-        var killColumn = new TableColumn<ProcessView, String>("KILL");
-        killColumn.setCellValueFactory(new PropertyValueFactory< ProcessView, String>("KILL THIS"));
+//        var killColumn = new TableColumn<ProcessView, String>("KILL");
+//        killColumn.setCellValueFactory(new PropertyValueFactory< ProcessView, String>("KILL THIS"));
 
         tableView.getColumns().add(pidColumn);
         tableView.getColumns().add(parentPidColumn);
         tableView.getColumns().add(userNameColumn);
         tableView.getColumns().add(processNameColumn);
         tableView.getColumns().add(argsColumn);
-        tableView.getColumns().add(killColumn);
+//        tableView.getColumns().add(killColumn);
 
         // select a row
 //        TableView.TableViewSelectionModel selectionModel = tableView.getSelectionModel();
@@ -74,12 +74,12 @@ public class FxMain extends Application {
         refreshButton.setOnAction(ignoreEvent -> System.out.println("Button pressed"));
 
         var killButton = new Button("Kill process");
-        killButton.setOnAction(ignoreEvent -> ProcessWatchApp.killDiscord(33220));
+        killButton.setOnAction(ignoreEvent -> ProcessWatchApp.killDiscord(37362));
 
         var box = new VBox();
         var scene = new Scene(box, 640, 480);
         var elements = box.getChildren();
-        scene.getStylesheets().add("font_style.css");
+//        scene.getStylesheets().add("font_style.css");
         elements.addAll(refreshButton, killButton,
                         tableView);
 
