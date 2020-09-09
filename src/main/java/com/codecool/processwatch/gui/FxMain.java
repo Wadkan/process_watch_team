@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -67,6 +68,21 @@ public class FxMain extends Application {
             System.out.println("List refreshed");
             app.refresh();
         });
+
+        // SELECTION
+        TableView.TableViewSelectionModel selectionModel;
+        selectionModel = tableView.getSelectionModel();
+        selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
+
+
+        var clearSelectedButton = new Button("Clear selection");
+        clearSelectedButton.setOnAction(actionEvent -> {
+            System.out.println("Selection has cleared");
+            ObservableList selectedItems = selectionModel.getSelectedItems();
+            selectedItems.forEach(item -> System.out.println("---> " + item));
+        });
+
+
         var refreshQuestionMark = new Button ("?");
         refreshQuestionMark.setOnAction(actionEvent -> popUpWindow ("Refresh", "This will refresh the page!", primaryStage));
         var aboutButton = new Button("About");
@@ -75,7 +91,11 @@ public class FxMain extends Application {
         aboutQuestionMark.setOnAction(actionEvent -> popUpWindow("About", "Test", primaryStage));
         HBox refreshBox = new HBox(10, refreshButton, refreshQuestionMark);
         HBox aboutBox = new HBox(10, aboutButton, aboutQuestionMark);
-        var box = new VBox(refreshBox, aboutBox);
+
+        // TODO selected about button for DAVID
+        HBox selectBox = new HBox(10, clearSelectedButton);
+
+        var box = new VBox(refreshBox, selectBox, aboutBox);
         var scene = new Scene(box, 640, 480);
 
         scene.getStylesheets().add("font_style.css");

@@ -29,9 +29,6 @@ public class ProcessWatchApp {
         this.processDisplay = processDisplay;
         this.actualQuery = startingQuery;
         refresh();
-//        System.out.println("-----BEFORE KILL DISCORD");
-//        killDiscord(31622);
-//        System.out.println("-----AFTER KILL DISCORD");
     }
 
     /**
@@ -54,7 +51,7 @@ public class ProcessWatchApp {
     }
 
 
-    public static void killDiscord(long pidForKill) {
+    public static void killAProcess(long pidForKill) {
         Stream<ProcessHandle> processStream = ProcessHandle.allProcesses();
         processStream.forEach(process -> killAProcessFromList(process, pidForKill));
     }
@@ -65,5 +62,9 @@ public class ProcessWatchApp {
             String name = process.info().command().get();
             System.out.println(name + " is killed.");
         }
+    }
+
+    private static void clearSelected(){
+//        selectionModel.clearSelection();
     }
 }
