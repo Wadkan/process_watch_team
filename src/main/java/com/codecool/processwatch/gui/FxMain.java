@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -61,7 +62,9 @@ public class FxMain extends Application {
         tableView.getColumns().add(argsColumn);
 
         var refreshButton = new Button("Refresh");
+        var refreshQuestionMark = new Button ("?");
         var aboutButton = new Button("About");         // we create the button here
+        var aboutQuestionMark = new Button("?");         // we create the button here
         refreshButton.setOnAction(ignoreEvent -> System.out.println("Button pressed"));
         aboutButton.setOnAction(actionEvent -> {
             final Stage dialog = new Stage();
@@ -74,10 +77,12 @@ public class FxMain extends Application {
             dialog.setScene(dialogScene);
             dialog.show();
         });
-        var box = new VBox();
+        HBox refreshBox = new HBox(10, refreshButton, refreshQuestionMark);
+        HBox aboutBox = new HBox(10, aboutButton, aboutQuestionMark);
+        var box = new VBox(refreshBox, aboutBox);
         var scene = new Scene(box, 640, 480);
         var elements = box.getChildren();
-        elements.addAll(refreshButton,aboutButton,          // we add here the button to the scene
+        elements.addAll(          // we add here the button to the scene
                         tableView);
 
 
