@@ -1,21 +1,23 @@
 package com.codecool.processwatch.gui;
 
+import com.codecool.processwatch.domain.ProcessWatchApp;
 import com.sun.javafx.menu.MenuItemBase;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.util.stream.Stream;
+
 import static javafx.collections.FXCollections.observableArrayList;
 
 /**
@@ -57,6 +59,7 @@ public class FxMain extends Application {
         processNameColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("processName"));
         var argsColumn = new TableColumn<ProcessView, String>("Arguments");
         argsColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("args"));
+
         tableView.getColumns().add(pidColumn);
         tableView.getColumns().add(parentPidColumn);
         tableView.getColumns().add(userNameColumn);
@@ -69,22 +72,22 @@ public class FxMain extends Application {
             app.refresh();
         });
 
-        // SELECTION
-        TableView.TableViewSelectionModel selectionModel;
-        selectionModel = tableView.getSelectionModel();
-        selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
+        Label label1 = new Label("PID:");
+        TextField textField = new TextField ();
+        HBox killBox = new HBox();
 
-
-        var clearSelectedButton = new Button("Clear selection");
-        clearSelectedButton.setOnAction(actionEvent -> {
-            System.out.println("Selection has cleared");
-            ObservableList selectedItems = selectionModel.getSelectedItems();
-            selectedItems.forEach(item -> System.out.println("---> " + item));
+        Button killButton = new Button("KILL");
+        killButton.setOnAction(actionEvent -> {
+            System.out.println("Process killed.");
+            int pidForKill = Integer.parseInt(textField.getText());
+            ProcessWatchApp.killAProcess(pidForKill);
         });
 
+        killBox.getChildren().addAll(label1, textField, killButton);
+        killBox.setSpacing(10);
 
-        var refreshQuestionMark = new Button ("?");
-        refreshQuestionMark.setOnAction(actionEvent -> popUpWindow ("Refresh", "This will refresh the page!", primaryStage));
+        var refreshQuestionMark = new Button("?");
+        refreshQuestionMark.setOnAction(actionEvent -> popUpWindow("Refresh", "This will refresh the page!", primaryStage));
         var aboutButton = new Button("About");
         aboutButton.setOnAction(actionEvent -> popUpWindow("About", "This is our program!", primaryStage));
         var aboutQuestionMark = new Button("?");
@@ -92,10 +95,7 @@ public class FxMain extends Application {
         HBox refreshBox = new HBox(10, refreshButton, refreshQuestionMark);
         HBox aboutBox = new HBox(10, aboutButton, aboutQuestionMark);
 
-        // TODO selected about button for DAVID
-        HBox selectBox = new HBox(10, clearSelectedButton);
-
-        var box = new VBox(refreshBox, selectBox, aboutBox);
+        var box = new VBox(refreshBox, killBox, aboutBox);
         var scene = new Scene(box, 640, 480);
 
         scene.getStylesheets().add("font_style.css");
@@ -107,7 +107,7 @@ public class FxMain extends Application {
         primaryStage.show();
     }
 
-    private void popUpWindow(String title, String text, Stage primaryStage){
+    private void popUpWindow(String title, String text, Stage primaryStage) {
         final Stage dialog = new Stage();
         dialog.setTitle(title);
         dialog.initModality(Modality.APPLICATION_MODAL);

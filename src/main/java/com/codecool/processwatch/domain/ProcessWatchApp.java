@@ -64,7 +64,4 @@ public class ProcessWatchApp {
         }
     }
 
-    private static void clearSelected(){
-//        selectionModel.clearSelection();
-    }
 }
