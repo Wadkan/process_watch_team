@@ -1,5 +1,8 @@
 package com.codecool.processwatch.domain;
 
+import java.util.ArrayList;
+import java.util.stream.Stream;
+
 /**
  * An application that can display the processes running on the system.
  * <p>
@@ -46,6 +49,21 @@ public class ProcessWatchApp {
         this.actualQuery = query;
         refresh();
     }
+
+
+    public static void killAProcess(long pidForKill) {
+        Stream<ProcessHandle> processStream = ProcessHandle.allProcesses();
+        processStream.forEach(process -> killAProcessFromList(process, pidForKill));
+    }
+
+    private static void killAProcessFromList(ProcessHandle process, long pidForKill) {
+        if (process.pid() == pidForKill) {
+            process.destroy();
+            String name = process.info().command().get();
+            System.out.println(name + " is killed.");
+        }
+    }
+
 
     public static String userArg;
     public static int ppidInput;
