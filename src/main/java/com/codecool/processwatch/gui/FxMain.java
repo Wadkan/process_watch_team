@@ -67,6 +67,8 @@ public class FxMain extends Application {
         var argsColumn = new TableColumn<ProcessView, String>("Arguments");
         argsColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("args"));
 
+        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
         tableView.getColumns().add(pidColumn);
         tableView.getColumns().add(parentPidColumn);
         tableView.getColumns().add(userNameColumn);
@@ -84,6 +86,7 @@ public class FxMain extends Application {
         killQuestionMark.setOnAction(actionEvent -> popUpWindow("Kill the program", "After you found, which program you want to\n kill" +
                 " paste the PID into the input field, after \nthat click on the KILL button!", primaryStage));
         TextField textField = new TextField();
+        textField.setPromptText("Enter PID to kill");
         HBox killBox = new HBox();
 
         Button killButton = new Button("KILL");
@@ -93,15 +96,28 @@ public class FxMain extends Application {
                 int pidForKill = Integer.parseInt(textField.getText());
                 ProcessWatchApp.killAProcess(pidForKill);
             } catch (NumberFormatException e) {
-                System.out.println("The PID can contain only numberes.");
+                System.out.println("The PID can contain only numbers.");
             }
         });
 
-        killBox.getChildren().addAll(textField, killButton, killQuestionMark);
+        Button killSelectedButton = new Button("KILL Selected");
+        killSelectedButton.setOnAction(actionEvent ->{
+            ObservableList<ProcessView> selectedToKill = tableView.getSelectionModel().getSelectedItems();
+            selectedToKill.forEach(selectedProcess -> ProcessWatchApp.killAProcess(selectedProcess.getPid()));
+        });
+        var killSelectedQuestionMark = new Button("?");
+        killSelectedQuestionMark.setOnAction(actionEvent -> popUpWindow("Search", "If you want to delete a process \n simply just click on the" +
+                " processes\n after that click KILL ", primaryStage));
+
+        killBox.getChildren().addAll(textField, killButton, killQuestionMark, killSelectedButton, killSelectedQuestionMark);
         killBox.setSpacing(10);
 
         var refreshQuestionMark = new Button("?");
-        refreshQuestionMark.setOnAction(actionEvent -> popUpWindow("Refresh", "This will refresh the page!", primaryStage));
+        refreshQuestionMark.setOnAction(actionEvent -> {
+            ObservableList<ProcessView> selected3 = tableView.getSelectionModel().getSelectedItems();
+            selected3.forEach(s -> System.out.println(s.getPid()));
+            popUpWindow("Refresh", "This will refresh the page!", primaryStage);
+        });
         var aboutButton = new Button("About");
         aboutButton.setOnAction(actionEvent -> popUpWindow("About", "This is our program!", primaryStage));
         var aboutQuestionMark = new Button("?");
