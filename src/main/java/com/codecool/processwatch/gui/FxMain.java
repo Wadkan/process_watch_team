@@ -173,6 +173,7 @@ public class FxMain extends Application {
         VBox dialogVbox = new VBox(20);
         dialogVbox.getChildren().add(new Text(text));
         Scene dialogScene = new Scene(dialogVbox, 300, 200);
+        dialogScene.getStylesheets().add("font_style.css");
         dialog.setScene(dialogScene);
         dialog.show();
     }
