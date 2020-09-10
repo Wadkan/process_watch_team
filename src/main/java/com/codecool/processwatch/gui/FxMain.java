@@ -72,7 +72,9 @@ public class FxMain extends Application {
             app.refresh();
         });
 
-        Label label1 = new Label("PID:");
+        var killQuestionMark = new Button("?");
+        killQuestionMark.setOnAction(actionEvent -> popUpWindow("Kill the program", "After you found, which program you want to\n kill" +
+                " paste the PID into the input field, after \nthat click on the KILL button!", primaryStage));
         TextField textField = new TextField ();
         HBox killBox = new HBox();
 
@@ -83,7 +85,7 @@ public class FxMain extends Application {
             ProcessWatchApp.killAProcess(pidForKill);
         });
 
-        killBox.getChildren().addAll(label1, textField, killButton);
+        killBox.getChildren().addAll(textField, killButton, killQuestionMark);
         killBox.setSpacing(10);
 
         var refreshQuestionMark = new Button("?");
