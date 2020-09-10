@@ -20,27 +20,52 @@ public class OsProcessSource implements ProcessSource {
      */
     @Override
     public Stream<Process> getProcesses() {
-        processList.clear();
-
         Stream<ProcessHandle> processStream = ProcessHandle.allProcesses();
 
-        String proba = ProcessWatchApp.userArg;
+        processList.clear();
 
-        if (proba == null) {
-            processStream.forEach(process -> addProcessToList(process, ""));
-        } else {
-            processStream.forEach(process -> addProcessToList(process, proba));
-        }
+        processStream.forEach(process -> addProcessToList(process));
 
         Stream<Process> stream = processList.stream();
 
+        if (ProcessWatchApp.option.equals("user")) {
+            Stream<Process> newStream = stream.filter(process -> filterByUserName(process, ProcessWatchApp.userArg));
+            return newStream;
+        } else if (ProcessWatchApp.option.equals("ppid")) {
+            Stream<Process> newStream = stream.filter(process -> filterByPPID(process, ProcessWatchApp.ppidInput));
+            return newStream;
+        } else if (ProcessWatchApp.option.equals("cmd")) {
+            Stream<Process> newStream = stream.filter(process -> filterByName(process, ProcessWatchApp.cmdInput));
+            return newStream;
+        }
         return stream;
 
     }
 
+    private static boolean filterByUserName(Process p, String userName) {
+        if (p.getUserName().equals(userName)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean filterByPPID(Process p, int ppid) {
+        if (p.getParentPid() == ppid) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean filterByName(Process p, String name) {
+        if (p.getName().equals(name)) {
+            return true;
+        }
+        return false;
+    }
+
     private static List<Process> processList = new ArrayList<>();
 
-    private static void addProcessToList(ProcessHandle process, String userArg) {
+    private static void addProcessToList(ProcessHandle process) {
         long processID = process.pid();
         Optional<ProcessHandle> parentProcess = process.parent();
         long parentPID;
@@ -70,16 +95,14 @@ public class OsProcessSource implements ProcessSource {
         String[] arguments;
         if (args.isPresent()) {
             if (args.get().length == 0) {
-                arguments = new String[] {"Not available"};
+                arguments = new String[]{"Not available"};
             } else {
                 arguments = args.get();
             }
         } else {
-            arguments = new String[] {"Not available"};
+            arguments = new String[]{"Not available"};
         }
         Process p = new Process(processID, parentPID, new User(userName), command, arguments);
-        if (userArg.equals(userName) || userArg.equals("")) {
-            processList.add(p);
-        }
+        processList.add(p);
     }
 }

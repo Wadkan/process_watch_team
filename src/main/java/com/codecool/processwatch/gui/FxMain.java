@@ -76,6 +76,7 @@ public class FxMain extends Application {
         var refreshButton = new Button("Refresh");
         refreshButton.setOnAction(actionEvent -> {
             System.out.println("List refreshed");
+            ProcessWatchApp.option = "all";
             app.refresh();
         });
 
@@ -109,15 +110,33 @@ public class FxMain extends Application {
         HBox aboutBox = new HBox(10, aboutButton, aboutQuestionMark);
 
         TextField userInput = new TextField();
-        userInput.setPromptText("Search by user");
-        userInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, userInput));
+        userInput.setPromptText("Search by Owner");
+        userInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, userInput, "user"));
         var searchButton = new Button("?");
         searchButton.setOnAction(actionEvent -> popUpWindow("Search", "If you want to search by owner \n simply just type in the input field" +
                 " after\n after that hit ENTER! ", primaryStage));
         userInput.getText();
         HBox userInputHBox = new HBox(10, userInput, searchButton);
 
-        var box = new VBox(refreshBox, killBox, aboutBox, userInputHBox);
+        TextField ppidInput = new TextField();
+        ppidInput.setPromptText("Search by PPID");
+        ppidInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, ppidInput, "ppid"));
+        var ppidButton = new Button("?");
+        ppidButton.setOnAction(actionEvent -> popUpWindow("Search", "If you want to search by PPID \n simply just type in the input field" +
+                " after\n after that hit ENTER! ", primaryStage));
+        ppidInput.getText();
+        HBox ppidInputHBox = new HBox(10, ppidInput, ppidButton);
+
+        TextField cmdInput = new TextField();
+        cmdInput.setPromptText("Search by Process Name");
+        cmdInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, cmdInput, "cmd"));
+        var cmdButton = new Button("?");
+        cmdButton.setOnAction(actionEvent -> popUpWindow("Search", "If you want to search by Process Name \n simply just type in the input field" +
+                " after\n after that hit ENTER! ", primaryStage));
+        cmdInput.getText();
+        HBox cmdInputHBox = new HBox(10, cmdInput, cmdButton);
+
+        var box = new VBox(refreshBox, aboutBox, userInputHBox, ppidInputHBox, cmdInputHBox, killBox);
 
         var scene = new Scene(box, 640, 480);
 
@@ -142,10 +161,24 @@ public class FxMain extends Application {
         dialog.show();
     }
 
-    public void keyPressed(KeyEvent e, TextField userInput) {
+    public void keyPressed(KeyEvent e, TextField input, String option) {
         if (e.getCode() == KeyCode.ENTER) {
-            String inputText = userInput.getText();
-            ProcessWatchApp.userArg = inputText;
+            String inputText = input.getText();
+            switch (option) {
+                case "user":
+                    ProcessWatchApp.userArg = inputText;
+                    ProcessWatchApp.option = "user";
+                    break;
+                case "ppid":
+                    if (!inputText.equals("")) {
+                        ProcessWatchApp.ppidInput = Integer.parseInt(inputText);
+                    }
+                    ProcessWatchApp.option = "ppid";
+                    break;
+                case "cmd":
+                    ProcessWatchApp.cmdInput = inputText;
+                    ProcessWatchApp.option = "cmd";
+            }
             app.refresh();
         }
     }
