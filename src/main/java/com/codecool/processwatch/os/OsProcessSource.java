@@ -28,8 +28,39 @@ public class OsProcessSource implements ProcessSource {
 
         Stream<Process> stream = processList.stream();
 
+        if (ProcessWatchApp.option.equals("user")) {
+            Stream<Process> newStream = stream.filter(process -> filterByUserName(process, ProcessWatchApp.userArg));
+            return newStream;
+        } else if (ProcessWatchApp.option.equals("ppid")) {
+            Stream<Process> newStream = stream.filter(process -> filterByPPID(process, ProcessWatchApp.ppidInput));
+            return newStream;
+        } else if (ProcessWatchApp.option.equals("cmd")) {
+            Stream<Process> newStream = stream.filter(process -> filterByName(process, ProcessWatchApp.cmdInput));
+            return newStream;
+        }
         return stream;
 
+    }
+
+    private static boolean filterByUserName(Process p, String userName) {
+        if (p.getUserName().equals(userName)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean filterByPPID(Process p, int ppid) {
+        if (p.getParentPid() == ppid) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean filterByName(Process p, String name) {
+        if (p.getName().equals(name)) {
+            return true;
+        }
+        return false;
     }
 
     private static List<Process> processList = new ArrayList<>();
@@ -72,22 +103,6 @@ public class OsProcessSource implements ProcessSource {
             arguments = new String[]{"Not available"};
         }
         Process p = new Process(processID, parentPID, new User(userName), command, arguments);
-
-        if (ProcessWatchApp.option.equals("all")) {
-            processList.add(p);
-        } else if (ProcessWatchApp.option.equals("user")) {
-            if (ProcessWatchApp.userArg.equals(userName)) {
-                processList.add(p);
-            }
-        } else if (ProcessWatchApp.option.equals("ppid")) {
-            if (ProcessWatchApp.ppidInput == parentPID) {
-                processList.add(p);
-            }
-        } else if (ProcessWatchApp.option.equals("cmd")) {
-            if (ProcessWatchApp.cmdInput.equals(command)) {
-                processList.add(p);
-            }
-        }
-
+        processList.add(p);
     }
 }
