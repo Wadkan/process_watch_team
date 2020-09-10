@@ -49,6 +49,8 @@ public class FxMain extends Application {
      *
      * @param primaryStage a stage created by the JavaFX runtime.
      */
+    private static ProcessView selected;
+
     public void start(Stage primaryStage) {
         primaryStage.setTitle(TITLE);
 
@@ -66,6 +68,8 @@ public class FxMain extends Application {
         processNameColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("processName"));
         var argsColumn = new TableColumn<ProcessView, String>("Arguments");
         argsColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("args"));
+
+        System.out.println(selected);
 
         tableView.getColumns().add(pidColumn);
         tableView.getColumns().add(parentPidColumn);
@@ -93,15 +97,24 @@ public class FxMain extends Application {
                 int pidForKill = Integer.parseInt(textField.getText());
                 ProcessWatchApp.killAProcess(pidForKill);
             } catch (NumberFormatException e) {
-                System.out.println("The PID can contain only numberes.");
+                System.out.println("The PID can contain only numbers.");
             }
         });
 
-        killBox.getChildren().addAll(textField, killButton, killQuestionMark);
+        Button killSelectedButton = new Button("KILL Selected");
+        killSelectedButton.setOnAction(actionEvent ->{
+            ProcessWatchApp.killAProcess(tableView.getSelectionModel().getSelectedItem().getPid());
+        });
+
+        killBox.getChildren().addAll(textField, killButton, killQuestionMark, killSelectedButton);
         killBox.setSpacing(10);
 
         var refreshQuestionMark = new Button("?");
-        refreshQuestionMark.setOnAction(actionEvent -> popUpWindow("Refresh", "This will refresh the page!", primaryStage));
+        refreshQuestionMark.setOnAction(actionEvent -> {
+            selected = tableView.getSelectionModel().getSelectedItem();
+            System.out.println(selected.getPid());
+            popUpWindow("Refresh", "This will refresh the page!", primaryStage);
+        });
         var aboutButton = new Button("About");
         aboutButton.setOnAction(actionEvent -> popUpWindow("About", "This is our program!", primaryStage));
         var aboutQuestionMark = new Button("?");
