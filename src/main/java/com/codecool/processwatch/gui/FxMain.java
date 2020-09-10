@@ -82,14 +82,18 @@ public class FxMain extends Application {
         var killQuestionMark = new Button("?");
         killQuestionMark.setOnAction(actionEvent -> popUpWindow("Kill the program", "After you found, which program you want to\n kill" +
                 " paste the PID into the input field, after \nthat click on the KILL button!", primaryStage));
-        TextField textField = new TextField ();
+        TextField textField = new TextField();
         HBox killBox = new HBox();
 
         Button killButton = new Button("KILL");
         killButton.setOnAction(actionEvent -> {
             System.out.println("Process killed.");
-            int pidForKill = Integer.parseInt(textField.getText());
-            ProcessWatchApp.killAProcess(pidForKill);
+            try {
+                int pidForKill = Integer.parseInt(textField.getText());
+                ProcessWatchApp.killAProcess(pidForKill);
+            } catch (NumberFormatException e) {
+                System.out.println("The PID can contain only numberes.");
+            }
         });
 
         killBox.getChildren().addAll(textField, killButton, killQuestionMark);
@@ -139,7 +143,7 @@ public class FxMain extends Application {
     }
 
     public void keyPressed(KeyEvent e, TextField userInput) {
-        if (e.getCode()== KeyCode.ENTER){
+        if (e.getCode() == KeyCode.ENTER) {
             String inputText = userInput.getText();
             ProcessWatchApp.userArg = inputText;
             app.refresh();
