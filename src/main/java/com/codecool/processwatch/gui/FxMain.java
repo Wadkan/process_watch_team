@@ -72,6 +72,7 @@ public class FxMain extends Application {
         var refreshButton = new Button("Refresh");
         refreshButton.setOnAction(actionEvent -> {
             System.out.println("List refreshed");
+            ProcessWatchApp.option = "all";
             app.refresh();
         });
         var refreshQuestionMark = new Button ("?");
@@ -85,11 +86,17 @@ public class FxMain extends Application {
 
         TextField userInput = new TextField();
         userInput.setPromptText("Search by user");
-        userInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, userInput));
+        userInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, userInput, "user"));
         userInput.getText();
         HBox userInputHBox = new HBox(10, userInput);
 
-        var box = new VBox(refreshBox, aboutBox, userInputHBox);
+        TextField ppidInput = new TextField();
+        ppidInput.setPromptText("Search by PPID");
+        ppidInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, ppidInput, "ppid"));
+        ppidInput.getText();
+        HBox ppidInputHBox = new HBox(10, ppidInput);
+
+        var box = new VBox(refreshBox, aboutBox, userInputHBox, ppidInputHBox);
         var scene = new Scene(box, 640, 480);
         var elements = box.getChildren();
         elements.addAll(tableView);
@@ -109,10 +116,21 @@ public class FxMain extends Application {
         dialog.show();
     }
 
-    public void keyPressed(KeyEvent e, TextField userInput) {
+    public void keyPressed(KeyEvent e, TextField input, String option) {
         if (e.getCode()== KeyCode.ENTER){
-            String inputText = userInput.getText();
-            ProcessWatchApp.userArg = inputText;
+            String inputText = input.getText();
+            switch (option) {
+                case "user":
+                    ProcessWatchApp.userArg = inputText;
+                    ProcessWatchApp.option = "user";
+                    System.out.println("useres");
+                    break;
+                case "ppid":
+                    ProcessWatchApp.ppidInput = Integer.parseInt(inputText);
+                    ProcessWatchApp.option = "ppid";
+                    System.out.println("ppids");
+                    break;
+            }
             app.refresh();
         }
     }

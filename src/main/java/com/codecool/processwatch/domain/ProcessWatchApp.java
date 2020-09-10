@@ -48,4 +48,6 @@ public class ProcessWatchApp {
     }
 
     public static String userArg;
+    public static int ppidInput;
+    public static String option = "all";
 }

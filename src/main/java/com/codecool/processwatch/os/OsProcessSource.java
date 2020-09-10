@@ -20,17 +20,11 @@ public class OsProcessSource implements ProcessSource {
      */
     @Override
     public Stream<Process> getProcesses() {
-        processList.clear();
-
         Stream<ProcessHandle> processStream = ProcessHandle.allProcesses();
 
-        String proba = ProcessWatchApp.userArg;
+        processList.clear();
 
-        if (proba == null) {
-            processStream.forEach(process -> addProcessToList(process, ""));
-        } else {
-            processStream.forEach(process -> addProcessToList(process, proba));
-        }
+        processStream.forEach(process -> addProcessToList(process));
 
         Stream<Process> stream = processList.stream();
 
@@ -40,7 +34,7 @@ public class OsProcessSource implements ProcessSource {
 
     private static List<Process> processList = new ArrayList<>();
 
-    private static void addProcessToList(ProcessHandle process, String userArg) {
+    private static void addProcessToList(ProcessHandle process) {
         long processID = process.pid();
         Optional<ProcessHandle> parentProcess = process.parent();
         long parentPID;
@@ -78,8 +72,20 @@ public class OsProcessSource implements ProcessSource {
             arguments = new String[] {"Not available"};
         }
         Process p = new Process(processID, parentPID, new User(userName), command, arguments);
-        if (userArg.equals(userName) || userArg.equals("")) {
+
+        if (ProcessWatchApp.option.equals("all")) {
             processList.add(p);
+            System.out.println("valami");
+        } else if (ProcessWatchApp.option.equals("user")) {
+            if (ProcessWatchApp.userArg.equals(userName)) {
+                processList.add(p);
+                System.out.println("hellobello " +  ProcessWatchApp.userArg);
+            }
+        } else if (ProcessWatchApp.option.equals("ppid")) {
+            if (ProcessWatchApp.ppidInput == parentPID) {
+                processList.add(p);
+            }
         }
+
     }
 }
