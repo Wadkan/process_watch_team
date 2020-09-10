@@ -1,5 +1,7 @@
 package com.codecool.processwatch.gui;
 
+import com.codecool.processwatch.domain.ProcessWatchApp;
+import com.codecool.processwatch.os.OsProcessSource;
 import com.sun.javafx.menu.MenuItemBase;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
@@ -110,10 +112,8 @@ public class FxMain extends Application {
     public void keyPressed(KeyEvent e, TextField userInput) {
         if (e.getCode()== KeyCode.ENTER){
             String inputText = userInput.getText();
-            System.out.println("The selected username is: " + inputText);
+            ProcessWatchApp.userArg = inputText;
             app.refresh();
         }
-
     }
-
 }

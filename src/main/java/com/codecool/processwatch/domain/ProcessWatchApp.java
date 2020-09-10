@@ -46,4 +46,6 @@ public class ProcessWatchApp {
         this.actualQuery = query;
         refresh();
     }
+
+    public static String userArg;
 }
