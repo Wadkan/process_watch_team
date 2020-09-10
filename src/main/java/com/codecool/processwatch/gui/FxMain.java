@@ -107,8 +107,11 @@ public class FxMain extends Application {
         TextField userInput = new TextField();
         userInput.setPromptText("Search by user");
         userInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, userInput));
+        var searchButton = new Button("?");
+        searchButton.setOnAction(actionEvent -> popUpWindow("Search", "If you want to search by owner \n simply just type in the input field" +
+                " after\n after that hit ENTER! ", primaryStage));
         userInput.getText();
-        HBox userInputHBox = new HBox(10, userInput);
+        HBox userInputHBox = new HBox(10, userInput, searchButton);
 
         var box = new VBox(refreshBox, killBox, aboutBox, userInputHBox);
 
