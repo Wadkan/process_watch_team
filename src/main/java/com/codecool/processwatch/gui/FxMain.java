@@ -49,8 +49,6 @@ public class FxMain extends Application {
      *
      * @param primaryStage a stage created by the JavaFX runtime.
      */
-    private static ProcessView selected;
-
     public void start(Stage primaryStage) {
         primaryStage.setTitle(TITLE);
 
@@ -69,7 +67,7 @@ public class FxMain extends Application {
         var argsColumn = new TableColumn<ProcessView, String>("Arguments");
         argsColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("args"));
 
-        System.out.println(selected);
+        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         tableView.getColumns().add(pidColumn);
         tableView.getColumns().add(parentPidColumn);
@@ -88,6 +86,7 @@ public class FxMain extends Application {
         killQuestionMark.setOnAction(actionEvent -> popUpWindow("Kill the program", "After you found, which program you want to\n kill" +
                 " paste the PID into the input field, after \nthat click on the KILL button!", primaryStage));
         TextField textField = new TextField();
+        textField.setPromptText("Enter PID to kill");
         HBox killBox = new HBox();
 
         Button killButton = new Button("KILL");
@@ -103,16 +102,20 @@ public class FxMain extends Application {
 
         Button killSelectedButton = new Button("KILL Selected");
         killSelectedButton.setOnAction(actionEvent ->{
-            ProcessWatchApp.killAProcess(tableView.getSelectionModel().getSelectedItem().getPid());
+            ObservableList<ProcessView> selectedToKill = tableView.getSelectionModel().getSelectedItems();
+            selectedToKill.forEach(selectedProcess -> ProcessWatchApp.killAProcess(selectedProcess.getPid()));
         });
+        var killSelectedQuestionMark = new Button("?");
+        killSelectedQuestionMark.setOnAction(actionEvent -> popUpWindow("Search", "If you want to delete a process \n simply just click on the" +
+                " processes\n after that click KILL ", primaryStage));
 
-        killBox.getChildren().addAll(textField, killButton, killQuestionMark, killSelectedButton);
+        killBox.getChildren().addAll(textField, killButton, killQuestionMark, killSelectedButton, killSelectedQuestionMark);
         killBox.setSpacing(10);
 
         var refreshQuestionMark = new Button("?");
         refreshQuestionMark.setOnAction(actionEvent -> {
-            selected = tableView.getSelectionModel().getSelectedItem();
-            System.out.println(selected.getPid());
+            ObservableList<ProcessView> selected3 = tableView.getSelectionModel().getSelectedItems();
+            selected3.forEach(s -> System.out.println(s.getPid()));
             popUpWindow("Refresh", "This will refresh the page!", primaryStage);
         });
         var aboutButton = new Button("About");
