@@ -8,6 +8,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -20,6 +22,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.util.stream.Stream;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
@@ -74,8 +78,29 @@ public class FxMain extends Application {
             System.out.println("List refreshed");
             app.refresh();
         });
-        var refreshQuestionMark = new Button ("?");
-        refreshQuestionMark.setOnAction(actionEvent -> popUpWindow ("Refresh", "This will refresh the page!", primaryStage));
+
+        var killQuestionMark = new Button("?");
+        killQuestionMark.setOnAction(actionEvent -> popUpWindow("Kill the program", "After you found, which program you want to\n kill" +
+                " paste the PID into the input field, after \nthat click on the KILL button!", primaryStage));
+        TextField textField = new TextField();
+        HBox killBox = new HBox();
+
+        Button killButton = new Button("KILL");
+        killButton.setOnAction(actionEvent -> {
+            System.out.println("Process killed.");
+            try {
+                int pidForKill = Integer.parseInt(textField.getText());
+                ProcessWatchApp.killAProcess(pidForKill);
+            } catch (NumberFormatException e) {
+                System.out.println("The PID can contain only numberes.");
+            }
+        });
+
+        killBox.getChildren().addAll(textField, killButton, killQuestionMark);
+        killBox.setSpacing(10);
+
+        var refreshQuestionMark = new Button("?");
+        refreshQuestionMark.setOnAction(actionEvent -> popUpWindow("Refresh", "This will refresh the page!", primaryStage));
         var aboutButton = new Button("About");
         aboutButton.setOnAction(actionEvent -> popUpWindow("About", "This is our program!", primaryStage));
         var aboutQuestionMark = new Button("?");
@@ -86,18 +111,26 @@ public class FxMain extends Application {
         TextField userInput = new TextField();
         userInput.setPromptText("Search by user");
         userInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, userInput));
+        var searchButton = new Button("?");
+        searchButton.setOnAction(actionEvent -> popUpWindow("Search", "If you want to search by owner \n simply just type in the input field" +
+                " after\n after that hit ENTER! ", primaryStage));
         userInput.getText();
-        HBox userInputHBox = new HBox(10, userInput);
+        HBox userInputHBox = new HBox(10, userInput, searchButton);
 
-        var box = new VBox(refreshBox, aboutBox, userInputHBox);
+        var box = new VBox(refreshBox, killBox, aboutBox, userInputHBox);
+
         var scene = new Scene(box, 640, 480);
+
+        scene.getStylesheets().add("font_style.css");
+
+
         var elements = box.getChildren();
         elements.addAll(tableView);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void popUpWindow(String title, String text, Stage primaryStage){
+    private void popUpWindow(String title, String text, Stage primaryStage) {
         final Stage dialog = new Stage();
         dialog.setTitle(title);
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -110,7 +143,7 @@ public class FxMain extends Application {
     }
 
     public void keyPressed(KeyEvent e, TextField userInput) {
-        if (e.getCode()== KeyCode.ENTER){
+        if (e.getCode() == KeyCode.ENTER) {
             String inputText = userInput.getText();
             ProcessWatchApp.userArg = inputText;
             app.refresh();
