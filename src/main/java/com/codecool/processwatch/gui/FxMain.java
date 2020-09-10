@@ -112,8 +112,6 @@ public class FxMain extends Application {
         TextField userInput = new TextField();
         userInput.setPromptText("Search by Owner");
         userInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, userInput, "user"));
-        userInput.setPromptText("Search by user");
-        userInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, userInput));
         var searchButton = new Button("?");
         searchButton.setOnAction(actionEvent -> popUpWindow("Search", "If you want to search by owner \n simply just type in the input field" +
                 " after\n after that hit ENTER! ", primaryStage));
@@ -123,14 +121,20 @@ public class FxMain extends Application {
         TextField ppidInput = new TextField();
         ppidInput.setPromptText("Search by PPID");
         ppidInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, ppidInput, "ppid"));
+        var ppidButton = new Button("?");
+        ppidButton.setOnAction(actionEvent -> popUpWindow("Search", "If you want to search by PPID \n simply just type in the input field" +
+                " after\n after that hit ENTER! ", primaryStage));
         ppidInput.getText();
-        HBox ppidInputHBox = new HBox(10, ppidInput);
+        HBox ppidInputHBox = new HBox(10, ppidInput, ppidButton);
 
         TextField cmdInput = new TextField();
         cmdInput.setPromptText("Search by Process Name");
         cmdInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, cmdInput, "cmd"));
+        var cmdButton = new Button("?");
+        cmdButton.setOnAction(actionEvent -> popUpWindow("Search", "If you want to search by Process Name \n simply just type in the input field" +
+                " after\n after that hit ENTER! ", primaryStage));
         cmdInput.getText();
-        HBox cmdInputHBox = new HBox(10, cmdInput);
+        HBox cmdInputHBox = new HBox(10, cmdInput, cmdButton);
 
         var box = new VBox(refreshBox, aboutBox, userInputHBox, ppidInputHBox, cmdInputHBox, killBox);
 
