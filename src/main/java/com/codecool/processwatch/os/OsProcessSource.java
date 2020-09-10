@@ -64,25 +64,27 @@ public class OsProcessSource implements ProcessSource {
         String[] arguments;
         if (args.isPresent()) {
             if (args.get().length == 0) {
-                arguments = new String[] {"Not available"};
+                arguments = new String[]{"Not available"};
             } else {
                 arguments = args.get();
             }
         } else {
-            arguments = new String[] {"Not available"};
+            arguments = new String[]{"Not available"};
         }
         Process p = new Process(processID, parentPID, new User(userName), command, arguments);
 
         if (ProcessWatchApp.option.equals("all")) {
             processList.add(p);
-            System.out.println("valami");
         } else if (ProcessWatchApp.option.equals("user")) {
             if (ProcessWatchApp.userArg.equals(userName)) {
                 processList.add(p);
-                System.out.println("hellobello " +  ProcessWatchApp.userArg);
             }
         } else if (ProcessWatchApp.option.equals("ppid")) {
             if (ProcessWatchApp.ppidInput == parentPID) {
+                processList.add(p);
+            }
+        } else if (ProcessWatchApp.option.equals("cmd")) {
+            if (ProcessWatchApp.cmdInput.equals(command)) {
                 processList.add(p);
             }
         }

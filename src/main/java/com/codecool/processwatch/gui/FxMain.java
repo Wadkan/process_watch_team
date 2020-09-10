@@ -85,7 +85,7 @@ public class FxMain extends Application {
         HBox aboutBox = new HBox(10, aboutButton, aboutQuestionMark);
 
         TextField userInput = new TextField();
-        userInput.setPromptText("Search by user");
+        userInput.setPromptText("Search by Owner");
         userInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, userInput, "user"));
         userInput.getText();
         HBox userInputHBox = new HBox(10, userInput);
@@ -96,7 +96,13 @@ public class FxMain extends Application {
         ppidInput.getText();
         HBox ppidInputHBox = new HBox(10, ppidInput);
 
-        var box = new VBox(refreshBox, aboutBox, userInputHBox, ppidInputHBox);
+        TextField cmdInput = new TextField();
+        cmdInput.setPromptText("Search by Process Name");
+        cmdInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, cmdInput, "cmd"));
+        cmdInput.getText();
+        HBox cmdInputHBox = new HBox(10, cmdInput);
+
+        var box = new VBox(refreshBox, aboutBox, userInputHBox, ppidInputHBox, cmdInputHBox);
         var scene = new Scene(box, 640, 480);
         var elements = box.getChildren();
         elements.addAll(tableView);
@@ -123,13 +129,14 @@ public class FxMain extends Application {
                 case "user":
                     ProcessWatchApp.userArg = inputText;
                     ProcessWatchApp.option = "user";
-                    System.out.println("useres");
                     break;
                 case "ppid":
                     ProcessWatchApp.ppidInput = Integer.parseInt(inputText);
                     ProcessWatchApp.option = "ppid";
-                    System.out.println("ppids");
                     break;
+                case "cmd":
+                    ProcessWatchApp.cmdInput = inputText;
+                    ProcessWatchApp.option = "cmd";
             }
             app.refresh();
         }
