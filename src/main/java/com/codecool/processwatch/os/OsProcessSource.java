@@ -5,7 +5,10 @@ import java.util.*;
 
 import com.codecool.processwatch.domain.Process;
 import com.codecool.processwatch.domain.ProcessSource;
+import com.codecool.processwatch.domain.ProcessWatchApp;
 import com.codecool.processwatch.domain.User;
+import com.codecool.processwatch.gui.App;
+import com.codecool.processwatch.gui.FxMain;
 
 /**
  * A process source using the Java {@code ProcessHandle} API to retrieve information
@@ -17,12 +20,19 @@ public class OsProcessSource implements ProcessSource {
      */
     @Override
     public Stream<Process> getProcesses() {
+        processList.clear();
 
         Stream<ProcessHandle> processStream = ProcessHandle.allProcesses();
 
-        Stream<Process> stream = processList.stream();
+        String proba = ProcessWatchApp.userArg;
 
-        processStream.forEach(process -> addProcessToList(process));
+        if (proba == null) {
+            processStream.forEach(process -> addProcessToList(process, ""));
+        } else {
+            processStream.forEach(process -> addProcessToList(process, proba));
+        }
+
+        Stream<Process> stream = processList.stream();
 
         return stream;
 
@@ -30,7 +40,7 @@ public class OsProcessSource implements ProcessSource {
 
     private static List<Process> processList = new ArrayList<>();
 
-    private static void addProcessToList(ProcessHandle process) {
+    private static void addProcessToList(ProcessHandle process, String userArg) {
         long processID = process.pid();
         Optional<ProcessHandle> parentProcess = process.parent();
         long parentPID;
@@ -67,8 +77,9 @@ public class OsProcessSource implements ProcessSource {
         } else {
             arguments = new String[] {"Not available"};
         }
-        System.out.println("pid: " + processID + " parent pid: " + parentPID + " user: " + userName + " command: " + command + " arguments: " + Arrays.toString(arguments));
         Process p = new Process(processID, parentPID, new User(userName), command, arguments);
-        processList.add(p);
+        if (userArg.equals(userName) || userArg.equals("")) {
+            processList.add(p);
+        }
     }
 }
