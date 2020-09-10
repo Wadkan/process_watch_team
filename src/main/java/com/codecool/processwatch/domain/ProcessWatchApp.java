@@ -64,4 +64,6 @@ public class ProcessWatchApp {
         }
     }
 
+
+    public static String userArg;
 }

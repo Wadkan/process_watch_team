@@ -19,4 +19,5 @@ public class App extends ProcessWatchApp {
     public App(ObservableList<ProcessView> displayList) {
         super(new OsProcessSource(), new GuiProcessDisplay(displayList), new SelectAll());
     }
+
 }

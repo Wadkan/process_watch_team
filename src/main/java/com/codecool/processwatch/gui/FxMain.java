@@ -1,6 +1,7 @@
 package com.codecool.processwatch.gui;
 
 import com.codecool.processwatch.domain.ProcessWatchApp;
+import com.codecool.processwatch.os.OsProcessSource;
 import com.sun.javafx.menu.MenuItemBase;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
@@ -9,7 +10,13 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.TableView.TableViewSelectionModel;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -97,7 +104,14 @@ public class FxMain extends Application {
         HBox refreshBox = new HBox(10, refreshButton, refreshQuestionMark);
         HBox aboutBox = new HBox(10, aboutButton, aboutQuestionMark);
 
-        var box = new VBox(refreshBox, killBox, aboutBox);
+        TextField userInput = new TextField();
+        userInput.setPromptText("Search by user");
+        userInput.setOnKeyPressed(actionEvent -> keyPressed(actionEvent, userInput));
+        userInput.getText();
+        HBox userInputHBox = new HBox(10, userInput);
+
+        var box = new VBox(refreshBox, killBox, aboutBox, userInputHBox);
+
         var scene = new Scene(box, 640, 480);
 
         scene.getStylesheets().add("font_style.css");
@@ -121,4 +135,11 @@ public class FxMain extends Application {
         dialog.show();
     }
 
+    public void keyPressed(KeyEvent e, TextField userInput) {
+        if (e.getCode()== KeyCode.ENTER){
+            String inputText = userInput.getText();
+            ProcessWatchApp.userArg = inputText;
+            app.refresh();
+        }
+    }
 }
