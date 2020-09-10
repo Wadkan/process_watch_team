@@ -131,7 +131,9 @@ public class FxMain extends Application {
                     ProcessWatchApp.option = "user";
                     break;
                 case "ppid":
-                    ProcessWatchApp.ppidInput = Integer.parseInt(inputText);
+                    if (!inputText.equals("")) {
+                        ProcessWatchApp.ppidInput = Integer.parseInt(inputText);
+                    }
                     ProcessWatchApp.option = "ppid";
                     break;
                 case "cmd":
