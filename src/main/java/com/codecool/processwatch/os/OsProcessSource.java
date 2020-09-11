@@ -28,39 +28,34 @@ public class OsProcessSource implements ProcessSource {
 
         Stream<Process> stream = processList.stream();
 
-        if (ProcessWatchApp.option.equals("user")) {
-            Stream<Process> newStream = stream.filter(process -> filterByUserName(process, ProcessWatchApp.userArg));
-            return newStream;
-        } else if (ProcessWatchApp.option.equals("ppid")) {
-            Stream<Process> newStream = stream.filter(process -> filterByPPID(process, ProcessWatchApp.ppidInput));
-            return newStream;
-        } else if (ProcessWatchApp.option.equals("cmd")) {
-            Stream<Process> newStream = stream.filter(process -> filterByName(process, ProcessWatchApp.cmdInput));
-            return newStream;
+        switch (ProcessWatchApp.option) {
+            case "user": {
+                Stream<Process> newStream = stream.filter(process -> filterByUserName(process, ProcessWatchApp.userArg));
+                return newStream;
+            }
+            case "ppid": {
+                Stream<Process> newStream = stream.filter(process -> filterByPPID(process, ProcessWatchApp.ppidInput));
+                return newStream;
+            }
+            case "cmd": {
+                Stream<Process> newStream = stream.filter(process -> filterByName(process, ProcessWatchApp.cmdInput));
+                return newStream;
+            }
         }
         return stream;
 
     }
 
     private static boolean filterByUserName(Process p, String userName) {
-        if (p.getUserName().equals(userName)) {
-            return true;
-        }
-        return false;
+        return p.getUserName().equals(userName);
     }
 
     private static boolean filterByPPID(Process p, int ppid) {
-        if (p.getParentPid() == ppid) {
-            return true;
-        }
-        return false;
+        return p.getParentPid() == ppid;
     }
 
     private static boolean filterByName(Process p, String name) {
-        if (p.getName().equals(name)) {
-            return true;
-        }
-        return false;
+        return p.getName().equals(name);
     }
 
     private static List<Process> processList = new ArrayList<>();
